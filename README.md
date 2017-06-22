@@ -38,7 +38,7 @@ In our production environment, we decided to install the OpenStack Client on the
    * ```ansible-vault encrypt inventories/#_environment_#/group_vars/openstack-client.yml --vault-password-file .vault_pass.txt```
 
 7. Execute this command to run Ansible on develoment inventory and to instance new virtual machine:
-   * ```ansible-playbook site.yml -i inventories/development/development.ini --vault-password-file .vault_pass.txt
+   * ```ansible-playbook site.yml -i inventories/development/development.ini --vault-password-file .vault_pass.txt```
 
 
 ## Useful Commands
