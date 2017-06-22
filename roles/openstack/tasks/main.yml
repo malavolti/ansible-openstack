@@ -1,0 +1,177 @@
+---
+# tasks file for openstack
+
+- name: "Be sure that necessary variables are set"
+  set_fact:
+   os_auth:
+    auth_url: "{{ os['auth_url'] }}"
+    username: "{{ os['username'] }}"
+    password: "{{ os['password'] }}"
+    user_domain_name: "{{ os['user_domain_name'] }}"    
+    project_name: "{{ os['project_name'] }}"    
+    project_id: "{{ os['project_id'] }}"
+  tags: openstack
+
+- name: "Be sure to have created the virtual machine volume"
+  os_volume:
+   state: "present"
+   auth: "{{ os_auth }}"
+   size: "{{ item['volume_size'] }}"
+   display_name: "{{ item['volume_name'] }}"
+   display_description: "Volume used by {{ item['fqdn'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['volume_name'] is defined
+   - item['volume_name'] != ""
+   - item['volume_size'] is defined
+   - item['volume_size'] != ""
+  tags: openstack
+
+- name: "Be sure to have set fixed IP on the IdP"
+  os_port:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['port_name'] }}"
+   network: "{{ os['network']}}"
+   security_groups: "{{ item['security_groups'] }}"
+   fixed_ips:
+    - ip_address: "{{ item['ip_priv'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_priv'] is defined
+   - item['ip_priv'] != ""
+  tags: openstack
+
+- name: "Be sure to have created the new instance with volume"
+  os_server:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   image: "{{ item['image'] }}"
+   flavor: "{{ item['flavor'] }}"
+   nics:
+    - port-name: "{{ item['port_name'] }}"
+   timeout: "{{ os['timeout'] }}"
+   floating_ips: "{{ item['ip_pub'] }}"
+   key_name: "{{ item['key_name'] }}"
+   volumes: "{{ item['volume_name'] }}"
+  with_items: "{{ os_vms }}"
+  register: os_srv
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['image'] is defined
+   - item['image'] != ""
+   - item['flavor'] is defined
+   - item['flavor'] != ""
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_pub'] is defined
+   - item['ip_pub'] != ""
+   - item['key_name'] is defined
+   - item['key_name'] != ""
+   - item['security_groups'] is defined
+   - item['security_groups'] != ""
+   - item['volume_name'] is defined
+   - item['volume_name'] != ""
+  tags: openstack
+
+- name: "Be sure to have created the new instance without volume"
+  os_server:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   image: "{{ item['image'] }}"
+   flavor: "{{ item['flavor'] }}"
+   nics:
+    - port-name: "{{ item['port_name'] }}"
+   timeout: "{{ os['timeout'] }}"
+   floating_ips: "{{ item['ip_pub'] }}"
+   key_name: "{{ item['key_name'] }}"
+   security_groups: "{{ item['security_groups'] }}"
+  with_items: "{{ os_vms }}"
+  register: os_srv
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['image'] is defined
+   - item['image'] != ""
+   - item['flavor'] is defined
+   - item['flavor'] != ""
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_pub'] is defined
+   - item['ip_pub'] != ""
+   - item['key_name'] is defined
+   - item['key_name'] != ""
+   - item['security_groups'] is defined
+   - item['security_groups'] != ""
+  tags: openstack
+
+- name: "Be sure to create fact used to mount the volume"
+  set_fact:
+   volume_dev: "{{ os_srv['results'][0]['openstack']['volumes'][0]['device'] }}"
+   volume_fs: "{{ item['volume_fs'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['volume_fs'] is defined
+   - item['volume_fs'] != ""
+  tags: openstack
+
+- name: "Be sure to have deleted the new instance"
+  os_server:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "absent"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+  tags: openstack
+
+- name: "Be sure to have removed fixed IP on the IdP"
+  os_port:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   name: "{{ item['port_name'] }}"
+   network: "{{ os['network']}}"
+   fixed_ips:
+    - ip_address: "{{ item['ip_priv'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "absent"
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_priv'] is defined
+   - item['ip_priv'] != ""
+  tags: openstack
+
+- name: "Be sure to have deleted the virtual machine volume"
+  os_volume:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   display_name: "{{ item['volume_name'] }}"
+  with_items: "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "absent"
+   - item['volume_name'] is defined
+   - item['volume_name'] != ""
+  tags: openstack

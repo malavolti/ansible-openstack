@@ -1,0 +1,27 @@
+# ignore generated 'retry' files
+*.retry
+
+# ignore vault password file
+*.vault_pass.txt
+
+
+# ignore swp files
+*.swp
+
+# ignore emacs files
+*~
+
+# ignore .git_ignore files
+*.git_ignore
+
+
+# Ignore all files belonging the group_vars dir
+inventories/*/group_vars/*
+
+# Excluded templates files
+!group_vars/all.yml-template
+!group_vars/openstack-client.yml-template
+
+
+# ignore Ansible inventories
+*.ini
