@@ -12,7 +12,7 @@ In our production environment, we decided to install the OpenStack Client on the
 
 ## Simple flow to Instance new virtual Machine
 
-1. Be sure that the OpenStack Client is installed and works when you'll run this Playbook (localhost)
+1. Be sure that the OpenStack Client is installed and works when you'll run this Playbook (on localhost in our case)
 
 2. Become ROOT:
    * ```sudo su -```
@@ -30,7 +30,7 @@ In our production environment, we decided to install the OpenStack Client on the
     * ```/opt/ansible-openstack/#_environment_#/group_vars/openstack-client.yml-template```
 
    into proper ```/opt/ansible-openstack/#_environment_#/group_vars/all.yml``` and ```/opt/ansible-openstack/#_environment_#/group_vars/openstack-client.yml``` files.
-   These files will provide to Ansible all variables needed to instance (or remove) virtual machines on Openstack Cloud by its CLI.
+   These files will provide to Ansible all variables needed to instance (or delete) virtual machines on Openstack Cloud by its CLI.
 
 6. Encrypt the Openstack configuration files with Ansible Vault (Optional: this is needed ONLY when you need Ansible Vault):
    * ```cd /opt/ansible-openstack```

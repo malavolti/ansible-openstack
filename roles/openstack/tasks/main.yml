@@ -100,7 +100,6 @@
    key_name: "{{ item['key_name'] }}"
    security_groups: "{{ item['security_groups'] }}"
   with_items: "{{ os_vms }}"
-  register: os_srv
   when:
    - item['state'] is defined
    - item['state'] == "present"
@@ -118,18 +117,6 @@
    - item['key_name'] != ""
    - item['security_groups'] is defined
    - item['security_groups'] != ""
-  tags: openstack
-
-- name: "Be sure to create fact used to mount the volume"
-  set_fact:
-   volume_dev: "{{ os_srv['results'][0]['openstack']['volumes'][0]['device'] }}"
-   volume_fs: "{{ item['volume_fs'] }}"
-  with_items: "{{ os_vms }}"
-  when:
-   - item['state'] is defined
-   - item['state'] == "present"
-   - item['volume_fs'] is defined
-   - item['volume_fs'] != ""
   tags: openstack
 
 - name: "Be sure to have deleted the new instance"
