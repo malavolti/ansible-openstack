@@ -12,7 +12,7 @@
 #   volume_fs: ext4            (FileSystem of the new volume)
 #   flavor: "example-flavor"   (Flavor Name used for the new vm)
 #   image: "Debian-8.8.2"      (name of the image loaded and available into OpenStack)
-#   key_name: "my-vm-ssh.key"     (SSH key to user to enter on the vms)
+#   key_name: "my-ssh.key"     (SSH key to user to enter on the vms)
 #   security_groups: "default" (or a YAML list of security_groups)
 #   state: "present"           (or "absent" to remove it")
 
@@ -26,7 +26,7 @@ os_vms:
      volume_fs: "volume-fs"
      flavor: "example-flavor"
      image: "Debian-8.8.2"
-     key_name: "my-vm-ssh.key"
+     key_name: "my-ssh.key"
      security_groups: "default"
      state: "present"
    - fqdn: "FQDN-2"
@@ -38,7 +38,7 @@ os_vms:
      volume_fs: "volume-fs-2"
      flavor: "example-flavor"
      image: "Debian-8.8.2"
-     key_name: "my-vm-ssh.key"
+     key_name: "my-ssh.key"
      security_groups:
       - "default"
       - "SSH"
