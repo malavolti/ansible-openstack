@@ -8,7 +8,7 @@ In our production environment, we decided to install the OpenStack Client on the
 ## Requirements
 
 * [Ansible](https://www.ansible.com/) - Tested with Ansible v2.3.1.0
-* [OpenStack Client](https://docs.openstack.org/user-guide/common/cli-install-openstack-command-line-clients.html)
+* [OpenStack Client](https://pypi.python.org/pypi/python-openstackclient)
 
 ## Simple flow to Instance new virtual Machine
 
@@ -37,14 +37,24 @@ In our production environment, we decided to install the OpenStack Client on the
    * ```ansible-vault encrypt inventories/#_environment_#/group_vars/all.yml --vault-password-file .vault_pass.txt```
    * ```ansible-vault encrypt inventories/#_environment_#/group_vars/openstack-client.yml --vault-password-file .vault_pass.txt```
 
-7. Execute this command to run Ansible on develoment inventory and to instance new virtual machine:
-   * ```ansible-playbook site.yml -i inventories/development/development.ini --vault-password-file .vault_pass.txt```
+7. Execute this command to run Ansible on production inventory and to instance new virtual machine:
+   * ```ansible-playbook site.yml -i inventories/production/production.ini --vault-password-file .vault_pass.txt```
 
 
 ## Useful Commands
 
 ```
 --- development.ini ---
+[openstack-client]
+localhost
+-----------------------
+
+--- production.ini ----
+[openstack-client]
+localhost
+-----------------------
+
+------ test.ini -------
 [openstack-client]
 localhost
 -----------------------
