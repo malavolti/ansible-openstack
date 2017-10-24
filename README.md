@@ -7,7 +7,7 @@ In our production environment, we decided to install the OpenStack Client on the
 
 ## Requirements
 
-* [Ansible](https://www.ansible.com/) - Tested with Ansible v2.3.1.0
+* [Ansible](https://www.ansible.com/) - Tested with Ansible v2.4.0.0
 * [OpenStack Client](https://pypi.python.org/pypi/python-openstackclient)
 
 ## Simple flow to Instance new virtual Machine

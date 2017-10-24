@@ -3,42 +3,52 @@
 #
 # Example Value for the list of VMs:
 #
-# - fqdn: "idp.example.org"
-#   port_name: "port-idp.example.org"
+# - fqdn: "fqdn.example.org"
+#   port_name: "port-fqdn.example.org"
 #   ip_priv: "192.168.1.54"
 #   ip_pub: "69.89.31.226"
-#   volume_name: "data-idp.example.org" (if you don't need a persistent Volume for your VM, don't provide "volume_*" variables)
-#   volume_size: 250           (volume size in GigaByte)
-#   volume_fs: ext4            (FileSystem of the new volume)
-#   flavor: "example-flavor"   (Flavor Name used for the new vm)
-#   image: "Debian-8.8.2"      (name of the image loaded and available into OpenStack)
-#   key_name: "my-ssh.key"     (SSH key to user to enter on the vms)
-#   security_groups: "default" (or a YAML list of security_groups)
-#   state: "present"           (or "absent" to remove it")
+#   boot_volume:
+#    name: "boot-vlm-fqdn.example.org" (if you don't need a persistent Volume for your VM, don't provide "volume_*" variables)
+#    size: "10"                        (volume size in GigaBytes)
+#    image: "Debian-8.8.2"             (Linux Distribution Image available into Openstack)
+#   data_volume:
+#    name: "data-vlm-fqdn.example.org"
+#    size: "250"                       (volume size in GigaBytes)
+#   flavor: "example-flavor"           (Flavor Name used for the new vm)
+#   image: "Debian-8.8.2"              (name of the image loaded and available into OpenStack)
+#   key_name: "my-vm-ssh.key"          (SSH key to user to enter on the vms)
+#   security_groups: "default"         (or a YAML list of security_groups)
+#   state: "present"                    (or "absent" to remove it")
 
 os_vms:
    - fqdn: "FQDN"
      port_name: "port-name"
      ip_priv: "private-ip-address"
      ip_pub: "public-ip-address"
-     volume_name: "volume-name"
-     volume_size: "volume-size"
-     volume_fs: "volume-fs"
+     boot_volume:
+      name: "boot-volume-name"
+      size: "boot-volume-size"
+      image: "boot-volume-image"
+     data_volume:
+      name: "data-volume-name"
+      size: "data-volume-size"
      flavor: "example-flavor"
-     image: "Debian-8.8.2"
-     key_name: "my-ssh.key"
+     key_name: "my-vm-ssh.key"
      security_groups: "default"
      state: "present"
    - fqdn: "FQDN-2"
      port_name: "port-name-2"
      ip_priv: "private-ip-address-2"
      ip_pub: "public-ip-address-2"
-     volume_name: "volume-name-2"
-     volume_size: "volume-size-2"
-     volume_fs: "volume-fs-2"
+     boot_volume:
+      name: "boot-volume-name"
+      size: "boot-volume-size"
+      image: "boot-volume-image"
+     data_volume:
+      name: "data-volume-name"
+      size: "data-volume-size"
      flavor: "example-flavor"
-     image: "Debian-8.8.2"
-     key_name: "my-ssh.key"
+     key_name: "my-vm-ssh.key"
      security_groups:
       - "default"
       - "SSH"

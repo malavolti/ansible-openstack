@@ -12,23 +12,51 @@
     project_id: "{{ os['project_id'] }}"
   tags: openstack
 
-- name: "Be sure to have created the virtual machine volume"
+- name: "Be sure to have created the virtual machine BOOT volume"
   os_volume:
    state: "present"
    auth: "{{ os_auth }}"
-   size: "{{ item['volume_size'] }}"
-   display_name: "{{ item['volume_name'] }}"
-   display_description: "Volume used by {{ item['fqdn'] }}"
-  with_items: "{{ os_vms }}"
+   size: "{{ item['boot_volume']['size'] }}"
+   image: "{{ item['boot_volume']['image'] | default(None)}}"
+   display_name: "{{ item['boot_volume']['name'] }}"
+   display_description: "Boot Volume used by {{ item['fqdn'] }}"
+  with_items: 
+   - "{{ os_vms }}"
   when:
    - item['state'] is defined
    - item['state'] == "present"
    - item['fqdn'] is defined
    - item['fqdn'] != ""
-   - item['volume_name'] is defined
-   - item['volume_name'] != ""
-   - item['volume_size'] is defined
-   - item['volume_size'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] is defined
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
+   - item['boot_volume']['size'] is defined
+   - item['boot_volume']['size'] != ""
+   - item['boot_volume']['image'] is defined
+   - item['boot_volume']['image'] != ""
+  tags: openstack
+
+- name: "Be sure to have created the virtual machine DATA volume"
+  os_volume:
+   state: "present"
+   auth: "{{ os_auth }}"
+   size: "{{ item['data_volume']['size'] }}"
+   display_name: "{{ item['data_volume']['name'] }}"
+   display_description: "Data Volume used by {{ item['fqdn'] }}"
+  with_items: 
+   - "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
+   - item['data_volume']['size'] is defined
+   - item['data_volume']['size'] != ""
   tags: openstack
 
 - name: "Be sure to have set fixed IP on the IdP"
@@ -50,19 +78,19 @@
    - item['ip_priv'] != ""
   tags: openstack
 
-- name: "Be sure to have created the new instance with volume"
+- name: "Be sure to have created the new instance with persistent + additional volume"
   os_server:
    state: "present"
    auth: "{{ os_auth }}"
    name: "{{ item['fqdn'] }}"
-   image: "{{ item['image'] }}"
+   boot_volume: "{{ item['boot_volume']['name'] | default(None) }}"
    flavor: "{{ item['flavor'] }}"
    nics:
     - port-name: "{{ item['port_name'] }}"
    timeout: "{{ os['timeout'] }}"
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
-   volumes: "{{ item['volume_name'] }}"
+   volumes: "{{ item['data_volume']['name'] | default(None) }}"
   with_items: "{{ os_vms }}"
   register: os_srv
   when:
@@ -70,8 +98,6 @@
    - item['state'] == "present"
    - item['fqdn'] is defined
    - item['fqdn'] != ""
-   - item['image'] is defined
-   - item['image'] != ""
    - item['flavor'] is defined
    - item['flavor'] != ""
    - item['port_name'] is defined
@@ -80,43 +106,14 @@
    - item['ip_pub'] != ""
    - item['key_name'] is defined
    - item['key_name'] != ""
-   - item['security_groups'] is defined
-   - item['security_groups'] != ""
-   - item['volume_name'] is defined
-   - item['volume_name'] != ""
-  tags: openstack
-
-- name: "Be sure to have created the new instance without volume"
-  os_server:
-   state: "present"
-   auth: "{{ os_auth }}"
-   name: "{{ item['fqdn'] }}"
-   image: "{{ item['image'] }}"
-   flavor: "{{ item['flavor'] }}"
-   nics:
-    - port-name: "{{ item['port_name'] }}"
-   timeout: "{{ os['timeout'] }}"
-   floating_ips: "{{ item['ip_pub'] }}"
-   key_name: "{{ item['key_name'] }}"
-   security_groups: "{{ item['security_groups'] }}"
-  with_items: "{{ os_vms }}"
-  when:
-   - item['state'] is defined
-   - item['state'] == "present"
-   - item['fqdn'] is defined
-   - item['fqdn'] != ""
-   - item['image'] is defined
-   - item['image'] != ""
-   - item['flavor'] is defined
-   - item['flavor'] != ""
-   - item['port_name'] is defined
-   - item['port_name'] != ""
-   - item['ip_pub'] is defined
-   - item['ip_pub'] != ""
-   - item['key_name'] is defined
-   - item['key_name'] != ""
-   - item['security_groups'] is defined
-   - item['security_groups'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
   tags: openstack
 
 - name: "Be sure to have deleted the new instance"
@@ -150,15 +147,34 @@
    - item['ip_priv'] != ""
   tags: openstack
 
-- name: "Be sure to have deleted the virtual machine volume"
+- name: "Be sure to have deleted the virtual machine DATA volumes"
   os_volume:
    state: "absent"
    auth: "{{ os_auth }}"
-   display_name: "{{ item['volume_name'] }}"
-  with_items: "{{ os_vms }}"
+   display_name: "{{ item['data_volume']['name'] }}"
+  with_items: 
+   - "{{ os_vms }}"
   when:
    - item['state'] is defined
    - item['state'] == "absent"
-   - item['volume_name'] is defined
-   - item['volume_name'] != ""
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
+  tags: openstack
+
+- name: "Be sure to have deleted the virtual machine BOOT volume"
+  os_volume:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   display_name: "{{ item['boot_volume']['name'] }}"
+  with_items: 
+   - "{{ os_vms }}"
+  when:
+   - item['state'] is defined
+   - item['state'] == "absent"
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
   tags: openstack
