@@ -17,7 +17,7 @@
    state: "present"
    auth: "{{ os_auth }}"
    size: "{{ item['boot_volume']['size'] }}"
-   image: "{{ item['boot_volume']['image'] | default(None)}}"
+   image: "{{ item['boot_volume']['image'] }}"
    display_name: "{{ item['boot_volume']['name'] }}"
    display_description: "Boot Volume used by {{ item['fqdn'] }}"
   with_items: 
@@ -121,7 +121,7 @@
    state: "present"
    auth: "{{ os_auth }}"
    name: "{{ item['fqdn'] }}"
-   boot_volume: "{{ item['boot_volume']['name'] | default(None) }}"
+   boot_volume: "{{ item['boot_volume']['name'] }}"
    flavor: "{{ item['flavor'] }}"
    nics:
     - port-name: "{{ item['port_name'] }}"
