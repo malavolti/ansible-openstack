@@ -65,7 +65,6 @@
    auth: "{{ os_auth }}"
    name: "{{ item['port_name'] }}"
    network: "{{ os['network']}}"
-   security_groups: "{{ item['security_groups'] }}"
    fixed_ips:
     - ip_address: "{{ item['ip_priv'] }}"
   with_items: "{{ os_vms }}"
@@ -83,14 +82,15 @@
    state: "present"
    auth: "{{ os_auth }}"
    name: "{{ item['fqdn'] }}"
-   boot_volume: "{{ item['boot_volume']['name'] | default(None) }}"
+   boot_volume: "{{ item['boot_volume']['name'] }}"
    flavor: "{{ item['flavor'] }}"
    nics:
     - port-name: "{{ item['port_name'] }}"
    timeout: "{{ os['timeout'] }}"
+   security_groups: "{{ item['security_groups'] }}"
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
-   volumes: "{{ item['data_volume']['name'] | default(None) }}"
+   volumes: "{{ item['data_volume']['name'] }}"
   with_items: "{{ os_vms }}"
   register: os_srv
   when:
@@ -114,6 +114,40 @@
    - item['data_volume'] != ""
    - item['data_volume']['name'] is defined
    - item['data_volume']['name'] != ""
+  tags: openstack
+
+- name: "Be sure to have created the new instance with persistent without additional volume"
+  os_server:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   boot_volume: "{{ item['boot_volume']['name'] | default(None) }}"
+   flavor: "{{ item['flavor'] }}"
+   nics:
+    - port-name: "{{ item['port_name'] }}"
+   timeout: "{{ os['timeout'] }}"
+   security_groups: "{{ item['security_groups'] }}"
+   floating_ips: "{{ item['ip_pub'] }}"
+   key_name: "{{ item['key_name'] }}"
+  with_items: "{{ os_vms }}"
+  register: os_srv
+  when:
+   - item['state'] is defined
+   - item['state'] == "present"
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['flavor'] is defined
+   - item['flavor'] != ""
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_pub'] is defined
+   - item['ip_pub'] != ""
+   - item['key_name'] is defined
+   - item['key_name'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
   tags: openstack
 
 - name: "Be sure to have deleted the new instance"
