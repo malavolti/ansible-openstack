@@ -1,0 +1,48 @@
+---
+# tasks file for openstack
+
+- name: "Delete instance for {{ item['fqdn'] }}"
+  os_server:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   api_timeout: "1000"
+  when:
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+
+- name: "Remove fixed IP from {{ item['fqdn'] }}"
+  os_port:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   name: "{{ item['port_name'] }}"
+   network: "{{ os['network']}}"
+   fixed_ips:
+    - ip_address: "{{ item['ip_priv'] }}"
+  when:
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_priv'] is defined
+   - item['ip_priv'] != ""
+
+- name: "Delete DATA volumes for {{ item['fqdn'] }}"
+  os_volume:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   display_name: "{{ item['data_volume']['name'] }}"
+  when:
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
+
+- name: "Delete BOOT volume for {{ item['fqdn'] }}"
+  os_volume:
+   state: "absent"
+   auth: "{{ os_auth }}"
+   display_name: "{{ item['boot_volume']['name'] }}"
+  when:
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""

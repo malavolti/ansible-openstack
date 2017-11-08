@@ -1,0 +1,117 @@
+---
+# tasks file for openstack
+
+- name: "Set fixed IP for {{ item['fqdn'] }}"
+  os_port:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['port_name'] }}"
+   network: "{{ os['network']}}"
+   security_groups: "{{ item['security_groups'] }}"
+   fixed_ips:
+    - ip_address: "{{ item['ip_priv'] }}"
+  when:
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_priv'] is defined
+   - item['ip_priv'] != ""
+
+- name: "Create BOOT volume for {{ item['fqdn'] }}"
+  os_volume:
+   state: "present"
+   auth: "{{ os_auth }}"
+   size: "{{ item['boot_volume']['size'] }}"
+   image: "{{ item['boot_volume']['image'] }}"
+   display_name: "{{ item['boot_volume']['name'] }}"
+   display_description: "Boot Volume used by {{ item['fqdn'] }}"
+  when:
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] is defined
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
+   - item['boot_volume']['size'] is defined
+   - item['boot_volume']['size'] != ""
+   - item['boot_volume']['image'] is defined
+   - item['boot_volume']['image'] != ""
+
+- name: "Create DATA volume for {{ item['fqdn'] }}"
+  os_volume:
+   state: "present"
+   auth: "{{ os_auth }}"
+   size: "{{ item['data_volume']['size'] }}"
+   display_name: "{{ item['data_volume']['name'] }}"
+   display_description: "Data Volume used by {{ item['fqdn'] }}"
+  when:
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
+   - item['data_volume']['size'] is defined
+   - item['data_volume']['size'] != ""
+
+- name: "Create new instance for {{ item['fqdn'] }} with persistent & additional volume"
+  os_server:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   boot_volume: "{{ item['boot_volume']['name'] }}"
+   flavor: "{{ item['flavor'] }}"
+   nics:
+    - port-name: "{{ item['port_name'] }}"
+   security_groups: "{{ item['security_groups'] }}"
+   timeout: "{{ os['timeout'] }}"
+   floating_ips: "{{ item['ip_pub'] }}"
+   key_name: "{{ item['key_name'] }}"
+   volumes: "{{ item['data_volume']['name'] }}"
+  when:
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['flavor'] is defined
+   - item['flavor'] != ""
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_pub'] is defined
+   - item['ip_pub'] != ""
+   - item['key_name'] is defined
+   - item['key_name'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
+   - item['data_volume'] is defined
+   - item['data_volume'] != ""
+   - item['data_volume']['name'] is defined
+   - item['data_volume']['name'] != ""
+
+- name: "Create new instance for {{ item['fqdn'] }} with ONLY persistent volume"
+  os_server:
+   state: "present"
+   auth: "{{ os_auth }}"
+   name: "{{ item['fqdn'] }}"
+   boot_volume: "{{ item['boot_volume']['name'] }}"
+   flavor: "{{ item['flavor'] }}"
+   nics:
+    - port-name: "{{ item['port_name'] }}"
+   security_groups: "{{ item['security_groups'] }}"
+   timeout: "{{ os['timeout'] }}"
+   floating_ips: "{{ item['ip_pub'] }}"
+   key_name: "{{ item['key_name'] }}"
+  when:
+   - item['fqdn'] is defined
+   - item['fqdn'] != ""
+   - item['flavor'] is defined
+   - item['flavor'] != ""
+   - item['port_name'] is defined
+   - item['port_name'] != ""
+   - item['ip_pub'] is defined
+   - item['ip_pub'] != ""
+   - item['key_name'] is defined
+   - item['key_name'] != ""
+   - item['boot_volume'] is defined
+   - item['boot_volume'] != ""
+   - item['boot_volume']['name'] is defined
+   - item['boot_volume']['name'] != ""
