@@ -24,6 +24,7 @@
    image: "{{ item['boot_volume']['image'] }}"
    display_name: "{{ item['boot_volume']['name'] }}"
    display_description: "Boot Volume used by {{ item['fqdn'] }}"
+   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -43,6 +44,7 @@
    size: "{{ item['data_volume']['size'] }}"
    display_name: "{{ item['data_volume']['name'] }}"
    display_description: "Data Volume used by {{ item['fqdn'] }}"
+   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""

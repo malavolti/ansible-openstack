@@ -10,7 +10,10 @@
     user_domain_name: "{{ os['user_domain_name'] }}"    
     project_name: "{{ os['project_name'] }}"    
     project_id: "{{ os['project_id'] }}"
-  tags: openstack
+  tags: 
+   - openstack
+   - os-create
+   - os-delete
 
 - name: "Create OpenStack Instances"
   include_tasks: create-os-vms.yml
@@ -18,7 +21,9 @@
   when:
    - item['state'] is defined
    - item['state'] == "present"
-  tags: openstack
+  tags: 
+   - openstack
+   - os-create
 
 - name: "Delete OpenStack Instances"
   include_tasks: delete-os-vms.yml
@@ -26,4 +31,6 @@
   when:
    - item['state'] is defined
    - item['state'] == "absent"
-  tags: openstack
+  tags: 
+   - openstack
+   - os-delete
