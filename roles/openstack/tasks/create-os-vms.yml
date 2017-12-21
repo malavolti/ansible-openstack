@@ -69,6 +69,7 @@
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
    volumes: "{{ item['data_volume']['name'] }}"
+   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -102,6 +103,7 @@
    timeout: "{{ os['timeout'] }}"
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
+   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
