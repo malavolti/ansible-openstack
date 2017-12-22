@@ -5,6 +5,7 @@
   os_port:
    state: "present"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    name: "{{ item['port_name'] }}"
    network: "{{ os['network']}}"
    security_groups: "{{ item['security_groups'] }}"
@@ -20,11 +21,11 @@
   os_volume:
    state: "present"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    size: "{{ item['boot_volume']['size'] }}"
    image: "{{ item['boot_volume']['image'] }}"
    display_name: "{{ item['boot_volume']['name'] }}"
    display_description: "Boot Volume used by {{ item['fqdn'] }}"
-   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -41,10 +42,10 @@
   os_volume:
    state: "present"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    size: "{{ item['data_volume']['size'] }}"
    display_name: "{{ item['data_volume']['name'] }}"
    display_description: "Data Volume used by {{ item['fqdn'] }}"
-   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -59,6 +60,7 @@
   os_server:
    state: "present"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    name: "{{ item['fqdn'] }}"
    boot_volume: "{{ item['boot_volume']['name'] }}"
    flavor: "{{ item['flavor'] }}"
@@ -69,7 +71,6 @@
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
    volumes: "{{ item['data_volume']['name'] }}"
-   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -94,6 +95,7 @@
   os_server:
    state: "present"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    name: "{{ item['fqdn'] }}"
    boot_volume: "{{ item['boot_volume']['name'] }}"
    flavor: "{{ item['flavor'] }}"
@@ -103,7 +105,6 @@
    timeout: "{{ os['timeout'] }}"
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
-   region_name: "{{ os['region_name'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""

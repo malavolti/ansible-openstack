@@ -5,6 +5,7 @@
   os_server:
    state: "absent"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    name: "{{ item['fqdn'] }}"
    api_timeout: "1000"
   when:
@@ -15,6 +16,7 @@
   os_port:
    state: "absent"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    name: "{{ item['port_name'] }}"
    network: "{{ os['network']}}"
    fixed_ips:
@@ -29,6 +31,7 @@
   os_volume:
    state: "absent"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    display_name: "{{ item['data_volume']['name'] }}"
   when:
    - item['data_volume'] is defined
@@ -40,6 +43,7 @@
   os_volume:
    state: "absent"
    auth: "{{ os_auth }}"
+   region_name: "{{ os['region_name'] }}"
    display_name: "{{ item['boot_volume']['name'] }}"
   when:
    - item['boot_volume'] is defined
