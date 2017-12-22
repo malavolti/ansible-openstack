@@ -1,0 +1,18 @@
+{% for vm in j2_vals %}
+ - fqdn: "{{ j2_vals[vm]['fqdn'] }}"
+   port_name: "port-{{ j2_vals[vm]['fqdn'] }}"
+   ip_priv: "{{ j2_vals[vm]['ip_priv'] }}"
+   ip_pub: "{{ j2_vals[vm]['ip_pub'] }}"
+   boot_volume:
+    name: "boot-vlm-{{ j2_vals[vm]['fqdn'] }}"
+    size: "10"
+    image: "Debian-8.8.2"
+   flavor: "idem-idpcloud"
+   key_name: "idpcloud"
+   security_groups:
+    - "default"
+    - "MGMT-SSH"
+    - "IdP-in-the-Cloud"
+    - "MGMT-Check_MK"
+   state: "{{ j2_vals[vm]['state'] }}"
+{% endfor%}

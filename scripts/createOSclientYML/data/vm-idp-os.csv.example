@@ -1,0 +1,4 @@
+FQDN;IP_PRIV;IP_PUB;STATE
+idp-test-1.example.org;192.168.80.55;56.147.136.31;present
+idp-test-2.example.org;192.168.80.56;56.147.136.67;present
+idp-test-3.example.org;192.168.80.57;56.147.136.18;present
