@@ -22,5 +22,5 @@
     - "{{ sg }}"
 {% endfor %}
 {% endif %}
-   state: "present"
+   state: "{{ j2_vals[idp]['state'] }}"
 {% endfor %}
