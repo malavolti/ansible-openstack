@@ -1,0 +1,4 @@
+FQDN;IP_PRIV;IP_PUB;BOOT_SIZE;BOOT_IMG;DATA_VLM_SIZE;FLAVOR;SEC_GROUPS;STATE
+idp-test-1.example.org;192.168.80.55;56.147.136.31;10;Debian-8.8.2;250;idem-idpcloud;default,MGMT-SSH;present
+idp-test-2.example.org;192.168.80.56;56.147.136.67;10;Debian-8.8.2;;idem-idpcloud;default;present
+idp-test-3.example.org;192.168.80.57;56.147.136.18;10;Debian-8.8.2;250;idem-idpcloud;;present
