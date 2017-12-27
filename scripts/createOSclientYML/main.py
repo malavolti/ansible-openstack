@@ -7,8 +7,8 @@ from jinja2 import Environment, FileSystemLoader
 
 ### CONSTANTS
 
-DEST_OS_YML="/opt/idpcloud-data/ansible-openstack/inventories/production/group_vars/openstack-client.yml"
-IDP_CSV="data/vm-idp-os.csv"
+DEST_OS_YML="output/openstack-client.yml"
+IDP_CSV="datas/openstack-client.csv"
 
 ### END CONSTANTS
 
@@ -47,7 +47,12 @@ if __name__ == '__main__':
       vals[idp_num]['fqdn'] = row[0]
       vals[idp_num]['ip_priv'] = row[1]
       vals[idp_num]['ip_pub'] = row[2]
-      vals[idp_num]['state'] = row[3]
+      vals[idp_num]['boot_vlm_size'] = row[3]
+      vals[idp_num]['boot_vlm_image'] = row[4]
+      vals[idp_num]['data_vlm_size'] = row[5]
+      vals[idp_num]['flavor'] = row[6]
+      vals[idp_num]['sec_groups'] = row[7].split(',')
+      vals[idp_num]['state'] = row[8]
 
       idp_num = idp_num + 1
 
