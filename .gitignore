@@ -16,12 +16,4 @@
 
 
 # Ignore all files belonging the group_vars dir
-inventories/*/group_vars/*
-
-# Excluded templates files
-!group_vars/all.yml-template
-!group_vars/openstack-client.yml-template
-
-
-# ignore Ansible inventories
-*.ini
+inventories/*
