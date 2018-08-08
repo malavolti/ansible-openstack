@@ -71,6 +71,8 @@
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
    volumes: "{{ item['data_volume']['name'] }}"
+   meta:
+    hostname: "{{ item['fqdn'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -78,8 +80,6 @@
    - item['flavor'] != ""
    - item['port_name'] is defined
    - item['port_name'] != ""
-   - item['ip_pub'] is defined
-   - item['ip_pub'] != ""
    - item['key_name'] is defined
    - item['key_name'] != ""
    - item['boot_volume'] is defined
@@ -105,6 +105,8 @@
    timeout: "{{ os['timeout'] }}"
    floating_ips: "{{ item['ip_pub'] }}"
    key_name: "{{ item['key_name'] }}"
+   meta:
+    hostname: "{{ item['fqdn'] }}"
   when:
    - item['fqdn'] is defined
    - item['fqdn'] != ""
@@ -112,8 +114,6 @@
    - item['flavor'] != ""
    - item['port_name'] is defined
    - item['port_name'] != ""
-   - item['ip_pub'] is defined
-   - item['ip_pub'] != ""
    - item['key_name'] is defined
    - item['key_name'] != ""
    - item['boot_volume'] is defined
