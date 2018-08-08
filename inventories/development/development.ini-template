@@ -1,3 +1,0 @@
-# Put here "localhost" because the OpenStack Client is installed here
-[openstack-client]
-localhost
