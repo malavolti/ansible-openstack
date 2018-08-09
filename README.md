@@ -19,7 +19,8 @@ In our production environment, we decided to install the OpenStack Client on the
 
 3. Retrieve GIT repository of the project:
    * ```apt-get install git```
-   * ```cd /opt ; git clone https://github.com/malavolti/ansible-openstack.git```
+   * ```cd /opt ; git clone https://github.com/[malavolti|ConsortiumGARR|GEANT]/ansible-openstack.git```
+   * ```cd /opt/ansible-openstack ; git clone https://github.com/[malavolti|ConsortiumGARR|GEANT]/ansible-openstack-inventories.git inventories```
 
 4. Create your ```.vault_pass.txt``` that contains the encryption password (this is needed ONLY when you use Ansible Vault):
    * ```cd /opt/ansible-openstack```
